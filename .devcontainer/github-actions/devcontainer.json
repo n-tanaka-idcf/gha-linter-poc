@@ -10,6 +10,8 @@
   "containerEnv": {
     "CLAUDE_CONFIG_DIR": "/misc/claude",
     "DEVCONTAINER_NAME": "github-actions",
+    // Keep Claude Code at the version pinned in mise.toml instead of self-updating
+    "DISABLE_AUTOUPDATER": "1",
     "GH_CONFIG_DIR": "/misc/gh"
   },
   "remoteEnv": {
