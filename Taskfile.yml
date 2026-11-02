@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+---
+version: "3"
+
+tasks:
+  default:
+    desc: Show available tasks
+    cmds:
+      - task --list-all --sort none
+
+  environment:check:
+    desc: Check required tools are available
+    cmds:
+      - claude --version
+      - curl --version
+      - docker --version
+      - gh --version
+      - git --version
+      - herdr --version
+      - jq --version
+      - mise --version
+      - ssh -V
+      - sudo --version
+      - task --version

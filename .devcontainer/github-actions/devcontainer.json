@@ -1,0 +1,84 @@
+{
+  "name": "github-actions",
+  "dockerComposeFile": [
+    "../compose.yml"
+  ],
+  "service": "github-actions",
+  "runServices": [
+    "github-actions"
+  ],
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/misc/claude",
+    "DEVCONTAINER_NAME": "github-actions",
+    // Keep Claude Code at the version pinned in mise.toml instead of self-updating
+    "DISABLE_AUTOUPDATER": "1",
+    "GH_CONFIG_DIR": "/misc/gh",
+    "HERDR_CONFIG_PATH": "/misc/herdr/config.toml",
+    // herdr keeps session state in $XDG_STATE_HOME/herdr
+    "XDG_STATE_HOME": "/misc/state"
+  },
+  "remoteEnv": {
+    "PATH": "/home/${containerEnv:USER}/.local/share/mise/shims:/home/${containerEnv:USER}/.local/bin:${containerEnv:PATH}"
+  },
+  "workspaceFolder": "/workspace",
+  "initializeCommand": "${localWorkspaceFolder}/.devcontainer/github-actions/initializeCommand.sh",
+  "mounts": [
+    {
+      "type": "volume",
+      "source": "misc",
+      "target": "/misc"
+    }
+  ],
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/github-actions/postCreateCommand.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {},
+    "ghcr.io/devcontainers-extra/features/curl-apt-get:1": {},
+    "ghcr.io/devcontainers-extra/features/mise:1": {
+      "version": "2026.10.25"
+    },
+    "ghcr.io/dhoeric/features/hadolint:1": {}
+  },
+  // The mise feature runs `git ls-remote` during install, so install git first
+  "overrideFeatureInstallOrder": [
+    "ghcr.io/devcontainers/features/git",
+    "ghcr.io/devcontainers-extra/features/mise"
+  ],
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // Editor
+        "editor.formatOnSave": true,
+        // Files
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.trimTrailingWhitespace": true,
+        // Github Actions
+        "[github-actions-workflow]": {
+          "editor.tabSize": 2,
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        // Redhat
+        "redhat.telemetry.enabled": false,
+        // Shell script
+        "[shellscript]": {
+          "editor.defaultFormatter": "foxundermoon.shell-format"
+        }
+      },
+      "extensions": [
+        // Docker
+        "exiasr.hadolint",
+        "ms-azuretools.vscode-docker",
+        // Github actions
+        "github.vscode-github-actions",
+        // Shell script
+        "foxundermoon.shell-format",
+        "mads-hartmann.bash-ide-vscode",
+        "timonwong.shellcheck",
+        // YAML
+        "redhat.vscode-yaml"
+      ]
+    }
+  }
+}
