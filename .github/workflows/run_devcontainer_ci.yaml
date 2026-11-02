@@ -75,11 +75,17 @@ jobs:
       - name: Set up docker buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
+      # Pass GITHUB_TOKEN into the container so that `mise install` in
+      # postCreateCommand avoids GitHub API rate limits
       - name: Build devcontainer
         uses: devcontainers/ci@513af61f4de4f75d37e4438f184ba4358f0fc1ca # v0.3.1900000450
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           configFile: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           push: never
+          env: |
+            GITHUB_TOKEN
           runCmd: |
             task environment:check
             echo "${DEVCONTAINER_NAME} has been built successfully"
