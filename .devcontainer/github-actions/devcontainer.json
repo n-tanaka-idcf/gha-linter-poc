@@ -1,0 +1,68 @@
+{
+  "name": "github-actions",
+  "dockerComposeFile": [
+    "../compose.yml"
+  ],
+  "service": "github-actions",
+  "runServices": [
+    "github-actions"
+  ],
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/misc/claude",
+    "DEVCONTAINER_NAME": "github-actions",
+    "GH_CONFIG_DIR": "/misc/gh"
+  },
+  "remoteEnv": {
+    "PATH": "/home/${containerEnv:USER}/.local/bin:${containerEnv:PATH}"
+  },
+  "workspaceFolder": "/workspace",
+  "initializeCommand": "${localWorkspaceFolder}/.devcontainer/github-actions/initializeCommand.sh",
+  "mounts": [
+    {
+      "type": "volume",
+      "source": "misc",
+      "target": "/misc"
+    }
+  ],
+  "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/$DEVCONTAINER_NAME/postCreateCommand.sh",
+  "features": {
+    "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/dhoeric/features/hadolint:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        // Editor
+        "editor.formatOnSave": true,
+        // Files
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "files.trimTrailingWhitespace": true,
+        // Github Actions
+        "[github-actions-workflow]": {
+          "editor.tabSize": 2,
+          "editor.defaultFormatter": "redhat.vscode-yaml"
+        },
+        // Redhat
+        "redhat.telemetry.enabled": false,
+        // Shell script
+        "[shellscript]": {
+          "editor.defaultFormatter": "foxundermoon.shell-format"
+        }
+      },
+      "extensions": [
+        // Docker
+        "exiasr.hadolint",
+        "ms-azuretools.vscode-docker",
+        // Github actions
+        "github.vscode-github-actions",
+        // Shell script
+        "foxundermoon.shell-format",
+        "mads-hartmann.bash-ide-vscode",
+        "timonwong.shellcheck",
+        // YAML
+        "redhat.vscode-yaml"
+      ]
+    }
+  }
+}
