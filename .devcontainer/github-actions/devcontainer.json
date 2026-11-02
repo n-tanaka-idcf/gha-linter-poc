@@ -12,7 +12,10 @@
     "DEVCONTAINER_NAME": "github-actions",
     // Keep Claude Code at the version pinned in mise.toml instead of self-updating
     "DISABLE_AUTOUPDATER": "1",
-    "GH_CONFIG_DIR": "/misc/gh"
+    "GH_CONFIG_DIR": "/misc/gh",
+    "HERDR_CONFIG_PATH": "/misc/herdr/config.toml",
+    // herdr keeps session state in $XDG_STATE_HOME/herdr
+    "XDG_STATE_HOME": "/misc/state"
   },
   "remoteEnv": {
     "PATH": "${containerEnv:HOME}/.local/share/mise/shims:${containerEnv:HOME}/.local/bin:${containerEnv:PATH}"

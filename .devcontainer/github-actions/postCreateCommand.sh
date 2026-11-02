@@ -9,6 +9,8 @@ sudo chown "$(id -un):$(id -gn)" "$target_dir"
 target_sub_dirs=(
   "claude"
   "gh"
+  "herdr"
+  "state"
 )
 
 for dir in "${target_sub_dirs[@]}"; do
