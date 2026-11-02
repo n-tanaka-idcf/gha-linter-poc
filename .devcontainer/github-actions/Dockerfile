@@ -16,6 +16,7 @@ RUN apt-get update && \
     bash-completion \
     ca-certificates \
     curl \
+    git \
     sudo \
     tzdata && \
     apt-get clean && \
