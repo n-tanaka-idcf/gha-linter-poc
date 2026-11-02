@@ -87,5 +87,6 @@ jobs:
           env: |
             GITHUB_TOKEN
           runCmd: |
+            set -euo pipefail
             task environment:check
             echo "${DEVCONTAINER_NAME} has been built successfully"

@@ -18,7 +18,7 @@
     "XDG_STATE_HOME": "/misc/state"
   },
   "remoteEnv": {
-    "PATH": "${containerEnv:HOME}/.local/share/mise/shims:${containerEnv:HOME}/.local/bin:${containerEnv:PATH}"
+    "PATH": "/home/${containerEnv:USER}/.local/share/mise/shims:/home/${containerEnv:USER}/.local/bin:${containerEnv:PATH}"
   },
   "workspaceFolder": "/workspace",
   "initializeCommand": "${localWorkspaceFolder}/.devcontainer/github-actions/initializeCommand.sh",
