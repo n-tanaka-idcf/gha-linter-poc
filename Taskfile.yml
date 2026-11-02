@@ -16,6 +16,7 @@ tasks:
       - docker --version
       - gh --version
       - git --version
+      - herdr --version
       - jq --version
       - mise --version
       - ssh -V
