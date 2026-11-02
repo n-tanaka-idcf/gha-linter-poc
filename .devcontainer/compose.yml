@@ -1,0 +1,15 @@
+---
+services:
+  github-actions:
+    build:
+      context: github-actions/
+      dockerfile: Dockerfile
+      args:
+        UID: ${CONTAINER_UID:?Set CONTAINER_UID in .devcontainer/.env}
+        GID: ${CONTAINER_GID:?Set CONTAINER_GID in .devcontainer/.env}
+        USER: ${CONTAINER_USER:?Set CONTAINER_USER in .devcontainer/.env}
+    command: sleep infinity
+    tty: true
+    stdin_open: true
+    volumes:
+      - ../:/workspace

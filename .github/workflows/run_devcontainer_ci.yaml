@@ -1,0 +1,85 @@
+---
+name: run_devcontainer_ci
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/run_devcontainer_ci.yaml
+      - .devcontainer/**
+      - Taskfile.yml
+      - mise.toml
+  # Run on main to save the build cache that pull requests restore
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/run_devcontainer_ci.yaml
+      - .devcontainer/**
+      - Taskfile.yml
+      - mise.toml
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    strategy:
+      matrix:
+        include:
+          - devcontainer: github-actions
+      fail-fast: false
+
+    name: Build devcontainer for ${{ matrix.devcontainer }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Show workflow run-time information
+        run: |
+          echo "Workflow: ${GITHUB_WORKFLOW}"
+          echo "Branch: ${GITHUB_REF}"
+          echo "Ref name: ${GITHUB_REF_NAME}"
+          echo "Commit: ${GITHUB_SHA}"
+
+      # devcontainers/ci does not pass cacheTo to Docker Compose builds, so set
+      # the GitHub Actions cache on the compose service instead. The devcontainer
+      # CLI keeps these settings when it builds the image with Features.
+      - name: Use GitHub Actions cache for docker build
+        env:
+          SERVICE: ${{ matrix.devcontainer }}
+          SCOPE: devcontainer-${{ matrix.devcontainer }}
+        run: |
+          yq -i '
+            .services[strenv(SERVICE)].build.cache_from = ["type=gha,scope=" + strenv(SCOPE)] |
+            .services[strenv(SERVICE)].build.cache_to = ["type=gha,mode=max,scope=" + strenv(SCOPE)]
+          ' .devcontainer/compose.yml
+          cat .devcontainer/compose.yml
+
+      # devcontainer build does not run initializeCommand, so generate
+      # .devcontainer/.env here before building
+      - name: Generate .devcontainer/.env
+        env:
+          DEVCONTAINER: ${{ matrix.devcontainer }}
+        run: |
+          ".devcontainer/${DEVCONTAINER}/initializeCommand.sh"
+          cat .devcontainer/.env
+
+      - name: Set up docker buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
+
+      - name: Build devcontainer
+        uses: devcontainers/ci@513af61f4de4f75d37e4438f184ba4358f0fc1ca # v0.3.1900000450
+        with:
+          configFile: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
+          push: never
+          runCmd: |
+            task environment:check
+            echo "${DEVCONTAINER_NAME} has been built successfully"
