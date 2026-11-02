@@ -27,11 +27,19 @@
   "postCreateCommand": "${containerWorkspaceFolder}/.devcontainer/$DEVCONTAINER_NAME/postCreateCommand.sh",
   "features": {
     "ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/sshd:1": {},
+    "ghcr.io/devcontainers-extra/features/curl-apt-get:1": {},
     "ghcr.io/devcontainers-extra/features/mise:1": {
       "version": "2026.10.25"
     },
     "ghcr.io/dhoeric/features/hadolint:1": {}
   },
+  // The mise feature runs `git ls-remote` during install, so install git first
+  "overrideFeatureInstallOrder": [
+    "ghcr.io/devcontainers/features/git",
+    "ghcr.io/devcontainers-extra/features/mise"
+  ],
   "customizations": {
     "vscode": {
       "settings": {

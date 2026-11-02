@@ -79,5 +79,5 @@ jobs:
           configFile: .devcontainer/${{ matrix.devcontainer }}/devcontainer.json
           push: never
           runCmd: |
-            actionlint --version
+            task environment:check
             echo "${DEVCONTAINER_NAME} has been built successfully"
