@@ -59,6 +59,15 @@ jobs:
           ' .devcontainer/compose.yml
           cat .devcontainer/compose.yml
 
+      # devcontainer build does not run initializeCommand, so generate
+      # .devcontainer/.env here before building
+      - name: Generate .devcontainer/.env
+        env:
+          DEVCONTAINER: ${{ matrix.devcontainer }}
+        run: |
+          ".devcontainer/${DEVCONTAINER}/initializeCommand.sh"
+          cat .devcontainer/.env
+
       - name: Set up docker buildx
         uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4.2.0
 
