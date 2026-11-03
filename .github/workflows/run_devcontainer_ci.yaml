@@ -7,6 +7,7 @@ on:
       - .github/workflows/run_devcontainer_ci.yaml
       - .devcontainer/**
       - Taskfile.yml
+      - lefthook.yml
       - mise.toml
   # Run on main to save the build cache that pull requests restore
   push:
@@ -16,6 +17,7 @@ on:
       - .github/workflows/run_devcontainer_ci.yaml
       - .devcontainer/**
       - Taskfile.yml
+      - lefthook.yml
       - mise.toml
   workflow_dispatch:
 
