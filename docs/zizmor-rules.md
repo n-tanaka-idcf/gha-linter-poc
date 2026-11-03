@@ -249,7 +249,7 @@ rules:
 | --- | --- | --- | --- |
 | 手動 | `zizmor .`（`--offline` を付けるとオフライン） | トークンがあれば実行する | リポジトリ内のすべてのワークフロー、`action.yml`、Dependabot・pre-commit の設定 |
 | コミット前 | lefthook の pre-commit（`lefthook.yml`）で `zizmor --offline .` | 実行しない | 同上（ワークフロー、`action.yml`、Dependabot・pre-commit の設定、zizmor の設定ファイルをステージしたとき） |
-| CI | `.github/workflows/run_zizmor.yaml` で `zizmor --format github .` | `GITHUB_TOKEN` を渡して実行する | 同上（上記のファイルか `mise.toml` が変わった PR と `main` への push） |
+| CI | `.github/workflows/run_github_actions_lint.yaml` で `zizmor --format github .` | `GITHUB_TOKEN` を渡して実行する | 同上（ワークフロー、`action.yml`、各ツールの設定ファイル、`mise.toml` のいずれかが変わった PR と `main` への push） |
 
 コミット前のチェックはオフラインなので、`impostor-commit`、`known-vulnerable-actions`、`ref-confusion` は CI でしかチェックされません（`stale-action-refs` もオンラインのルールですが、`pedantic` 専用なので CI でも実行されません）。`typosquat-uses` はオフラインでも動きますが、リポジトリが実在するかを確かめられないため、確信度は低くなります。
 

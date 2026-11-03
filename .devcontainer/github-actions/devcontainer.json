@@ -35,7 +35,7 @@
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/sshd:1": {},
     "ghcr.io/devcontainers-extra/features/curl-apt-get:1": {},
-    // Keep in sync with the mise version in .github/workflows/run_actionlint.yaml
+    // Keep in sync with the mise version in .github/workflows/run_github_actions_lint.yaml
     "ghcr.io/devcontainers-extra/features/mise:1": {
       "version": "2026.10.25"
     },

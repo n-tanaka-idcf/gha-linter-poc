@@ -162,7 +162,7 @@ steps:
 | --- | --- | --- | --- |
 | 手動 | `ghasec`（`--online` を付けるとオンラインのルールも実行） | `--online` を付けたときだけ実行する | リポジトリ内のすべてのワークフローと `action.yml` |
 | コミット前 | lefthook の pre-commit（`lefthook.yml`）で `ghasec` | 実行しない | 同上（ワークフローか `action.yml` をステージしたとき） |
-| CI | `.github/workflows/run_ghasec.yaml` で `ghasec --online --format github-actions` | `GHASEC_GITHUB_TOKEN` にトークンを渡して実行する | 同上（上記のファイルか `mise.toml` が変わった PR と `main` への push） |
+| CI | `.github/workflows/run_github_actions_lint.yaml` で `ghasec --online --format github-actions` | `GHASEC_GITHUB_TOKEN` にトークンを渡して実行する | 同上（ワークフロー、`action.yml`、各ツールの設定ファイル、`mise.toml` のいずれかが変わった PR と `main` への push） |
 
 コミット前のチェックはオフラインなので、`archived-action`、`impostor-commit`、`mismatched-sha-tag`、`unpinned-transitive-action` は CI でしかチェックされません。
 

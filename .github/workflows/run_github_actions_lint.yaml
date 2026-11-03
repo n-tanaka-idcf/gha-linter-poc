@@ -1,0 +1,198 @@
+---
+name: run_github_actions_lint
+
+# Lint and audit GitHub Actions workflows and actions with actionlint, ghalint,
+# ghasec and zizmor. The paths below are the union of the files each tool reads
+on:
+  pull_request:
+    # Keep in sync with the paths under push
+    paths:
+      # Workflows and actions (all tools)
+      - .github/workflows/**
+      - "**/action.yml"
+      - "**/action.yaml"
+      # Tool versions (all tools)
+      - mise.toml
+      # actionlint
+      - .github/actionlint.yaml
+      - .github/actionlint.yml
+      - .github/actionlint-matcher.json
+      # ghalint
+      - ghalint.yaml
+      - ghalint.yml
+      - .ghalint.yaml
+      - .ghalint.yml
+      - .github/ghalint.yaml
+      - .github/ghalint.yml
+      - .github/.ghalint.yaml
+      - .github/.ghalint.yml
+      # zizmor
+      - .github/dependabot.yml
+      - .github/dependabot.yaml
+      - .pre-commit-config.yml
+      - .pre-commit-config.yaml
+      - .pre-commit-hooks.yaml
+      - zizmor.yml
+      - zizmor.yaml
+      - .github/zizmor.yml
+      - .github/zizmor.yaml
+  push:
+    branches:
+      - main
+    # Keep in sync with the paths under pull_request
+    paths:
+      - .github/workflows/**
+      - "**/action.yml"
+      - "**/action.yaml"
+      - mise.toml
+      - .github/actionlint.yaml
+      - .github/actionlint.yml
+      - .github/actionlint-matcher.json
+      - ghalint.yaml
+      - ghalint.yml
+      - .ghalint.yaml
+      - .ghalint.yml
+      - .github/ghalint.yaml
+      - .github/ghalint.yml
+      - .github/.ghalint.yaml
+      - .github/.ghalint.yml
+      - .github/dependabot.yml
+      - .github/dependabot.yaml
+      - .pre-commit-config.yml
+      - .pre-commit-config.yaml
+      - .pre-commit-hooks.yaml
+      - zizmor.yml
+      - zizmor.yaml
+      - .github/zizmor.yml
+      - .github/zizmor.yaml
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+# Each tool runs in its own job so that all of them report results even if
+# one fails, and each result shows up as a separate check on the PR
+jobs:
+  actionlint:
+    name: Lint GitHub Actions workflows
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Install actionlint and shellcheck (used by actionlint for run: scripts)
+      # at the versions pinned in mise.toml. Keep the mise version in sync with
+      # .devcontainer/github-actions/devcontainer.json
+      - name: Install actionlint and shellcheck
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          version: 2026.10.25
+          install_args: actionlint shellcheck
+
+      # Show errors as annotations on the PR diff. The matcher is copied from
+      # https://github.com/rhysd/actionlint/blob/v1.7.12/.github/actionlint-matcher.json
+      - name: Run actionlint
+        run: |
+          echo "::add-matcher::.github/actionlint-matcher.json"
+          actionlint -color
+
+  ghalint:
+    name: Lint GitHub Actions workflows and actions with ghalint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Install ghalint at the version pinned in mise.toml. Keep the mise
+      # version in sync with .devcontainer/github-actions/devcontainer.json
+      - name: Install ghalint
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          version: 2026.10.25
+          install_args: ghalint
+
+      - name: Run ghalint for workflows
+        run: ghalint run
+
+      # Run even if the workflow lint fails, to report all violations at once
+      - name: Run ghalint for actions
+        if: ${{ !cancelled() }}
+        run: ghalint run-action
+
+  ghasec:
+    name: Check GitHub Actions workflows and actions with ghasec
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Install ghasec and ShellCheck at the versions pinned in mise.toml.
+      # ghasec's shellcheck rule runs the shellcheck on PATH, so install it
+      # here instead of using the one preinstalled on the runner. Keep the
+      # mise version in sync with .devcontainer/github-actions/devcontainer.json
+      - name: Install ghasec and ShellCheck
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          version: 2026.10.25
+          install_args: aqua:koki-develop/ghasec shellcheck
+
+      - name: Show ShellCheck used by ghasec
+        run: |
+          command -v shellcheck
+          shellcheck --version
+
+      # --online enables rules that query the GitHub API; the token raises
+      # the rate limit. --format github-actions emits annotations
+      - name: Run ghasec
+        env:
+          GHASEC_GITHUB_TOKEN: ${{ github.token }}
+        run: ghasec --online --format github-actions
+
+  zizmor:
+    name: Audit GitHub Actions workflows and actions with zizmor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Install zizmor at the version pinned in mise.toml. Keep the mise
+      # version in sync with .devcontainer/github-actions/devcontainer.json
+      - name: Install zizmor
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          version: 2026.10.25
+          install_args: zizmor
+
+      # The token enables online audits (impostor-commit, ref-confusion,
+      # known-vulnerable-actions, etc.). --format github emits annotations
+      - name: Run zizmor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: zizmor --format github .
