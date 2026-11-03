@@ -44,3 +44,11 @@ pre-commit:
         - ".github/workflows/*.{yml,yaml}"
         - "**/action.{yml,yaml}"
       run: ghasec
+    # Check that every action in the workflows has an entry in the workflow
+    # lockfile. --verify-local runs offline and checks coverage only; CI runs
+    # --verify, which also checks that the locked commits verify upstream
+    - name: gh actions-lock
+      glob:
+        - ".github/workflows/*.{yml,yaml}"
+        - ".github/workflows/actions.lock"
+      run: gh actions-lock --verify-local

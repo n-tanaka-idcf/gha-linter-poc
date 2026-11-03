@@ -16,6 +16,7 @@ tasks:
       - curl --version
       - docker --version
       - gh --version
+      - gh actions-lock --version
       - ghalint --version
       - ghasec --version
       - git --version

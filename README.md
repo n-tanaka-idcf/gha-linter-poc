@@ -11,6 +11,18 @@ GitHub Actions のワークフロー（`.github/workflows/*.yml`）とアクシ�
 
 各ツールのバージョンは [`mise.toml`](mise.toml) で固定しています。
 
+## workflow lockfile
+
+ワークフローで使うアクションは、GitHub の [workflow lockfile](https://docs.github.com/actions/concepts/security/workflow-dependency-lockfiles)（[`.github/workflows/actions.lock`](.github/workflows/actions.lock)）でコミットに固定しています。`uses:` はタグ（例: `actions/checkout@v7.0.1`）で書き、実行時には lockfile に記録されたコミットが使われます。lockfile は GitHub CLI の拡張 [gh actions-lock](https://github.com/github/gh-actions-lock) で作ります。
+
+```bash
+gh actions-lock             # uses: を追加・変更したら実行して、lockfile も一緒にコミットする
+gh actions-lock --verify    # 書き込まずに、lockfile が最新で正しいかを確かめる
+```
+
+- アクションの更新は [Dependabot](.github/dependabot.yml) が行い、lockfile も同じ PR で更新されます。
+- ghalint と zizmor は lockfile を読むので、タグで書いた `uses:` を指摘しません。ghasec は lockfile に対応していないため、各 `uses:` に `# ghasec-ignore: unpinned-action` を付けています。
+
 ## セットアップ
 
 [devcontainer](.devcontainer/github-actions/devcontainer.json) を使います。コンテナを作ると、`mise install` で `mise.toml` のツールが入り、`lefthook install` で Git フックが設定されます。
@@ -25,6 +37,7 @@ devcontainer を使わない場合は、[mise](https://mise.jdx.dev/) を入れ�
 
 ```bash
 mise install
+gh extension install github/gh-actions-lock --pin v0.4.1
 lefthook install
 ```
 
@@ -32,7 +45,7 @@ lefthook install
 
 ### pre-commit フック
 
-ワークフローやアクションなど、各ツールが読むファイルをコミットすると [lefthook](lefthook.yml) が 4 つのツールを実行します。手動で実行するには次のようにします。
+ワークフローやアクションなど、各ツールが読むファイルをコミットすると [lefthook](lefthook.yml) が 4 つのツールと `gh actions-lock --verify-local`（すべての `uses:` が lockfile に載っているかのオフラインチェック）を実行します。手動で実行するには次のようにします。
 
 ```bash
 lefthook run pre-commit
@@ -54,7 +67,7 @@ ghasec
 
 | ワークフロー | 内容 |
 | --- | --- |
-| [run_github_actions_lint](.github/workflows/run_github_actions_lint.yaml) | 4 つのツールを別々のジョブで実行し、結果を PR のアノテーションとして表示します。zizmor と ghasec はオンラインのルールも有効にします |
+| [run_github_actions_lint](.github/workflows/run_github_actions_lint.yaml) | 4 つのツールと `gh actions-lock --verify` を別々のジョブで実行し、結果を PR のアノテーションとして表示します。zizmor と ghasec はオンラインのルールも有効にします |
 | [run_devcontainer_ci](.github/workflows/run_devcontainer_ci.yaml) | devcontainer を build し、`task environment:check` が通るか確認します |
 
 どちらも PR と `main` への push で、関係するファイルが変わったときに実行されます。
@@ -65,5 +78,7 @@ ghasec
 
 - 対応する `docs/<ツール名>-rules.md`（ルール一覧は固定したバージョンの公式ドキュメントをもとにしています）
 - actionlint の場合は [`.github/actionlint-matcher.json`](.github/actionlint-matcher.json)（actionlint 本家の同じバージョンからコピーしています）
+
+gh actions-lock は mise で管理できないため、[postCreateCommand.sh](.devcontainer/github-actions/postCreateCommand.sh) と [run_github_actions_lint.yaml](.github/workflows/run_github_actions_lint.yaml) の `--pin` でバージョンを揃えてください。
 
 mise 本体のバージョンは、[devcontainer.json](.devcontainer/github-actions/devcontainer.json) と [run_github_actions_lint.yaml](.github/workflows/run_github_actions_lint.yaml) の各ジョブで揃えてください。

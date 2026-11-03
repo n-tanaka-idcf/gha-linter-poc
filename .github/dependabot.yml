@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+---
+version: 2
+updates:
+  # For workflows in .github/workflows/actions.lock, Dependabot also updates
+  # the matching lockfile entry in the same pull request
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    # Wait before adopting new releases so that compromised releases are more
+    # likely to be found and pulled first
+    cooldown:
+      default-days: 7

@@ -20,8 +20,13 @@ ghalint run                 # ワークフロー
 ghalint run-action          # action.yml
 zizmor --offline .
 ghasec
+gh actions-lock --verify-local   # 全 uses: が lockfile に載っているか（オフライン）
 
 lefthook run pre-commit     # pre-commit フックをまとめて実行
+
+# workflow lockfile（.github/workflows/actions.lock）
+gh actions-lock             # uses: を追加・変更したら実行して lockfile を更新
+gh actions-lock --verify    # 書き込まずに検証（CI と同じ。ネットワークが必要）
 ```
 
 - ローカル（lefthook）は zizmor・ghasec を**オフライン**で動かす。GitHub API を使うルール（zizmor の impostor-commit、ghasec の online ルールなど）は CI でのみ `--online` / トークン付きで実行される。
@@ -32,6 +37,7 @@ lefthook run pre-commit     # pre-commit フックをまとめて実行
 複数ファイルに同じ情報が重複しており、変更時は揃える必要がある。
 
 - **mise 本体のバージョン**: `.devcontainer/github-actions/devcontainer.json` の mise feature と、`.github/workflows/run_github_actions_lint.yaml` の各ジョブの `jdx/mise-action` の `version:`（全ジョブ分）。
+- **gh actions-lock 拡張のバージョン**: gh の拡張は mise で管理できないため、`.devcontainer/github-actions/postCreateCommand.sh` と `run_github_actions_lint.yaml` の `gh extension install ... --pin` で揃える。
 - **ツールのバージョン**（`mise.toml`）を上げたとき:
   - 対応する `docs/<tool>-rules.md` を見直す（各ドキュメントは固定バージョンの公式ドキュメントへのリンクと、その版のルール一覧を持つ）。
   - actionlint の場合、`.github/actionlint-matcher.json` は actionlint 本家の同バージョンからコピーしたもの。
@@ -44,7 +50,9 @@ lefthook run pre-commit     # pre-commit フックをまとめて実行
 このリポジトリ自身のワークフローは上記リンターをすべて通す必要がある。既存ワークフローに倣うこと:
 
 - トップレベルに `permissions: {}`、各ジョブで必要最小限の `permissions:` と `timeout-minutes:` を指定する。
-- `uses:` は 40 文字のコミット SHA で固定し、`# vX.Y.Z` コメントを付ける。
+- アクションは workflow lockfile（`.github/workflows/actions.lock`、GitHub 公式の `gh actions-lock` で生成。手で編集しない）でコミットに固定する。`uses:` は `actions/checkout@v7.0.1` のように完全なタグで書き、`gh actions-lock` を実行して lockfile も一緒にコミットする。
+  - ghasec（v0.18.0）は lockfile 非対応のため、各 `uses:` の行末に `# ghasec-ignore: unpinned-action` を付ける。ghalint と zizmor（v1.32.0 以降）は lockfile を読むので設定不要。
+  - 他リポジトリの reusable workflow（`jobs.<id>.uses`）、`action.yml` 内のアクション、コンテナイメージは lockfile で固定されないので、従来どおり SHA やダイジェストで固定する。
 - `actions/checkout` には `persist-credentials: false` を付ける。
 - `run:` 内で `${{ }}` を直接展開せず、`env:` 経由で渡す。
 - `defaults.run.shell: bash` と `concurrency`（`cancel-in-progress: true`）を設定する。

@@ -168,4 +168,4 @@ steps:
 
 CI では `--format github-actions` で、指摘を PR の差分に注釈として表示します。GitHub の制限で、1 つのステップに表示できる注釈は 10 個までです。それより多い指摘は、ジョブのログで確認してください。
 
-ghasec と、`shellcheck` ルールが使う ShellCheck は、どの実行方法でも `mise.toml` で固定したバージョンを使います。CI では、ランナーにあらかじめ入っている ShellCheck ではなく、mise で入れたものを使います。このリポジトリでは、今のところ `ghasec-ignore` コメントは使っておらず、すべてのルールを適用しています。
+ghasec と、`shellcheck` ルールが使う ShellCheck は、どの実行方法でも `mise.toml` で固定したバージョンを使います。CI では、ランナーにあらかじめ入っている ShellCheck ではなく、mise で入れたものを使います。このリポジトリでは、ワークフローのアクションをロックファイル（`.github/workflows/actions.lock`）で固定しており、`uses:` はタグで書いています。ghasec（v0.18.0）はロックファイルを読まず、タグで書いた `uses:` を `unpinned-action` で指摘するため、各 `uses:` の行末に `# ghasec-ignore: unpinned-action` を書いています。ロックファイルで固定していない `uses:` にはこのコメントを書かないでください。ghasec がロックファイルに対応したら、このコメントは外します。ほかのルールはすべて適用しています。
