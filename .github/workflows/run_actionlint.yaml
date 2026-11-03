@@ -50,5 +50,9 @@ jobs:
           version: 2026.10.25
           install_args: actionlint shellcheck
 
+      # Show errors as annotations on the PR diff. The matcher is copied from
+      # https://github.com/rhysd/actionlint/blob/v1.7.12/.github/actionlint-matcher.json
       - name: Run actionlint
-        run: actionlint -color
+        run: |
+          echo "::add-matcher::.github/actionlint-matcher.json"
+          actionlint -color
