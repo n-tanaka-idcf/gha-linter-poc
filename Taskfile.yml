@@ -17,6 +17,7 @@ tasks:
       - docker --version
       - gh --version
       - ghalint --version
+      - ghasec --version
       - git --version
       - herdr --version
       - jq --version
