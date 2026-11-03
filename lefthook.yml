@@ -23,3 +23,13 @@ pre-commit:
         - "{,.}ghalint.{yml,yaml}"
         - ".github/{,.}ghalint.{yml,yaml}"
       run: ghalint run-action
+    # zizmor audits all workflows, actions and Dependabot configs under the
+    # repository. Run offline so the hook needs no GitHub token or network;
+    # online audits (e.g. impostor-commit) run in CI
+    - name: zizmor
+      glob:
+        - ".github/workflows/*.{yml,yaml}"
+        - "**/action.{yml,yaml}"
+        - ".github/dependabot.{yml,yaml}"
+        - "{,.github/}{,.}zizmor.{yml,yaml}"
+      run: zizmor --offline .
