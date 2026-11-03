@@ -14,15 +14,15 @@ GitHub Actions のワークフロー・アクション向けリンター（actio
 task                        # タスク一覧
 task environment:check      # 必要なツールが揃っているか確認（devcontainer CI でも実行）
 
-# リンターを個別に実行（lefthook の pre-commit と同じ内容）
-actionlint
-ghalint run                 # ワークフロー
-ghalint run-action          # action.yml
-zizmor --offline .
-ghasec
-gh actions-lock --verify-local   # 全 uses: が lockfile に載っているか（オフライン）
+task lint                   # 全リンターを全ファイルに実行（lefthook run pre-commit --all-files）
 
-lefthook run pre-commit     # pre-commit フックをまとめて実行
+# リンターを個別に実行（lefthook の pre-commit はこれらのタスクを呼ぶ）
+task lint:actionlint        # actionlint
+task lint:ghalint           # ghalint run（ワークフロー）
+task lint:ghalint-action    # ghalint run-action（action.yml）
+task lint:zizmor            # zizmor --offline .
+task lint:ghasec            # ghasec
+task lint:actions-lock      # gh actions-lock --verify-local（全 uses: が lockfile に載っているか。オフライン）
 
 # workflow lockfile（.github/workflows/actions.lock）
 gh actions-lock             # uses: を追加・変更したら実行して lockfile を更新

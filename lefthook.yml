@@ -11,20 +11,20 @@ pre-commit:
         - &workflows ".github/workflows/*.{yml,yaml}"
         - ".github/actionlint.{yml,yaml}"
         - &actions "**/action.{yml,yaml}"
-      run: actionlint
+      run: task lint:actionlint
     # ghalint takes no file arguments and always lints all workflows
     - name: ghalint
       glob:
         - *workflows
         - &ghalint_config "{,.}ghalint.{yml,yaml}"
         - &ghalint_config_in_github ".github/{,.}ghalint.{yml,yaml}"
-      run: ghalint run
+      run: task lint:ghalint
     - name: ghalint run-action
       glob:
         - *actions
         - *ghalint_config
         - *ghalint_config_in_github
-      run: ghalint run-action
+      run: task lint:ghalint-action
     # zizmor audits all workflows, actions, Dependabot configs and pre-commit
     # configs under the repository. Run offline so the hook needs no GitHub
     # token or network; online audits (e.g. impostor-commit) run in CI
@@ -37,7 +37,7 @@ pre-commit:
         - ".pre-commit-hooks.yaml"
         # zizmor reads only zizmor.yml / zizmor.yaml (no dotfile variants)
         - "{,.github/}zizmor.{yml,yaml}"
-      run: zizmor --offline .
+      run: task lint:zizmor
     # ghasec checks all workflows and actions under the repository. Run
     # offline so the hook needs no GitHub token or network; online rules run
     # in CI
@@ -45,7 +45,7 @@ pre-commit:
       glob:
         - *workflows
         - *actions
-      run: ghasec
+      run: task lint:ghasec
     # Check that every action in the workflows has an entry in the workflow
     # lockfile. --verify-local runs offline and checks coverage only; CI runs
     # --verify, which also checks that the locked commits verify upstream
@@ -53,4 +53,4 @@ pre-commit:
       glob:
         - *workflows
         - ".github/workflows/actions.lock"
-      run: gh actions-lock --verify-local
+      run: task lint:actions-lock
