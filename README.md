@@ -45,20 +45,21 @@ lefthook install
 
 ### pre-commit フック
 
-ワークフローやアクションなど、各ツールが読むファイルをコミットすると [lefthook](lefthook.yml) が 4 つのツールと `gh actions-lock --verify-local`（すべての `uses:` が lockfile に載っているかのオフラインチェック）を実行します。手動で実行するには次のようにします。
+ワークフローやアクションなど、各ツールが読むファイルをコミットすると [lefthook](lefthook.yml) が 4 つのツールと `gh actions-lock --verify-local`（すべての `uses:` が lockfile に載っているかのオフラインチェック）を実行します。lefthook は [Taskfile](Taskfile.yml) の `lint:*` タスクを呼んでいるので、同じチェックを `task` で手動実行できます。
 
 ```bash
-lefthook run pre-commit
+task lint                   # すべてのチェックを全ファイルに実行
 ```
 
 ツールを個別に実行することもできます。
 
 ```bash
-actionlint
-ghalint run          # ワークフロー
-ghalint run-action   # アクション
-zizmor --offline .
-ghasec
+task lint:actionlint
+task lint:ghalint           # ワークフロー
+task lint:ghalint-action    # アクション
+task lint:zizmor
+task lint:ghasec
+task lint:actions-lock
 ```
 
 ローカルでは GitHub のトークンやネットワークがなくても動くよう、zizmor と ghasec をオフラインで実行します。GitHub API を使うルール（zizmor の `impostor-commit`、ghasec のオンラインルールなど）は CI でだけ実行されます。

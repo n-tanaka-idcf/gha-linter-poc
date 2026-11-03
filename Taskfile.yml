@@ -29,3 +29,40 @@ tasks:
       - sudo --version
       - task --version
       - zizmor --version
+
+  # The lint tasks run the same commands as the lefthook pre-commit hook, which
+  # calls these tasks. CI runs zizmor and ghasec online with a GitHub token
+  lint:
+    desc: Run all linters on all files (same as the pre-commit hook)
+    cmds:
+      - lefthook run pre-commit --all-files
+
+  lint:actionlint:
+    desc: Lint workflows with actionlint
+    cmds:
+      - actionlint
+
+  lint:ghalint:
+    desc: Lint workflows with ghalint
+    cmds:
+      - ghalint run
+
+  lint:ghalint-action:
+    desc: Lint actions (action.yml) with ghalint
+    cmds:
+      - ghalint run-action
+
+  lint:zizmor:
+    desc: Audit workflows and actions with zizmor (offline)
+    cmds:
+      - zizmor --offline .
+
+  lint:ghasec:
+    desc: Check workflows and actions with ghasec (offline)
+    cmds:
+      - ghasec
+
+  lint:actions-lock:
+    desc: Check that every action is in the workflow lockfile (offline)
+    cmds:
+      - gh actions-lock --verify-local
