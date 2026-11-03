@@ -81,7 +81,7 @@ jobs:
           cat .devcontainer/.env
 
       - name: Set up docker buildx
-        uses: docker/setup-buildx-action@v4.2.0 # ghasec-ignore: unpinned-action
+        uses: docker/setup-buildx-action@v4.4.1 # ghasec-ignore: unpinned-action
 
       # Pass GITHUB_TOKEN into the container so that `mise install` in
       # postCreateCommand avoids GitHub API rate limits
