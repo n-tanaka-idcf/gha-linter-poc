@@ -11,6 +11,7 @@ tasks:
   environment:check:
     desc: Check required tools are available
     cmds:
+      - actionlint --version
       - claude --version
       - curl --version
       - docker --version
@@ -18,7 +19,9 @@ tasks:
       - git --version
       - herdr --version
       - jq --version
+      - lefthook --version
       - mise --version
+      - shellcheck --version
       - ssh -V
       - sudo --version
       - task --version

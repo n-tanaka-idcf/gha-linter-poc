@@ -29,3 +29,6 @@ fi
 cd "$(dirname "$0")/../.."
 mise trust
 mise install
+
+# Install Git hooks defined in lefthook.yml
+lefthook install
