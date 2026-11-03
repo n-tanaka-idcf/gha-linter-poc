@@ -2,6 +2,8 @@
 
 actionlint は、GitHub Actions のワークフローファイル（`.github/workflows/*.yml`）とアクションのメタデータ（`action.yml`）を静的にチェックするリンターです。このドキュメントは、このリポジトリで固定している **v1.7.12** の公式ドキュメント [checks.md](https://github.com/rhysd/actionlint/blob/v1.7.12/docs/checks.md) に載っている全チェック項目をまとめたものです。
 
+チェック項目は actionlint のバージョンによって変わるため、リンク先も v1.7.12 に固定しています。`mise.toml` で actionlint のバージョンを上げたときは、このドキュメントも見直してください。
+
 エラーは次の形式で出力されます。末尾の `[ルール名]` で、どのルールが出したエラーかが分かります。
 
 ```text
@@ -141,4 +143,4 @@ shellcheck と pyflakes は、それぞれ `PATH` 上にあるときだけ実行
 | コミット前 | lefthook の pre-commit（`lefthook.yml`） | 全ワークフロー（ワークフロー、`.github/actionlint.yaml`、`action.yml` のいずれかをステージしたとき） |
 | CI | `.github/workflows/run_actionlint.yaml` | 全ワークフロー（ワークフロー、`.github/actionlint.yaml`、`action.yml`、`mise.toml` が変わった PR と `main` への push） |
 
-actionlint と shellcheck のバージョンは、どの実行方法でも `mise.toml` で固定したもの（actionlint 1.7.12、shellcheck 0.11.0）を使います。
+actionlint と shellcheck は、どの実行方法でも `mise.toml` で固定したバージョンを使います。
