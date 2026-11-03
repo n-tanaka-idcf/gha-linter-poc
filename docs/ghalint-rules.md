@@ -127,7 +127,7 @@ excludes:
 | --- | --- | --- |
 | 手動 | `ghalint run` / `ghalint run-action` | 全ワークフロー / 全 `action.yml` |
 | コミット前 | lefthook の pre-commit（`lefthook.yml`） | 全ワークフロー（ワークフローか ghalint の設定ファイルをステージしたとき）、全 `action.yml`（`action.yml` か ghalint の設定ファイルをステージしたとき） |
-| CI | `.github/workflows/run_ghalint.yaml` | 全ワークフローと全 `action.yml`（ワークフロー、ghalint の設定ファイル、`action.yml`、`mise.toml` が変わった PR と `main` への push） |
+| CI | `.github/workflows/run_github_actions_lint.yaml` | 全ワークフローと全 `action.yml`（ワークフロー、`action.yml`、各ツールの設定ファイル、`mise.toml` のいずれかが変わった PR と `main` への push） |
 
 `ghalint run-action` がチェックするのは、リポジトリのルートから 3 階層下までにある `action.yml` / `action.yaml`（例：`foo/bar/baz/action.yml`）です。それより深い場所に置いた `action.yml` はチェックされません。
 
