@@ -19,6 +19,7 @@ tasks:
       - git --version
       - herdr --version
       - jq --version
+      - lefthook --version
       - mise --version
       - ssh -V
       - sudo --version
