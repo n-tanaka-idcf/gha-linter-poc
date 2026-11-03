@@ -36,3 +36,11 @@ pre-commit:
         # zizmor reads only zizmor.yml / zizmor.yaml (no dotfile variants)
         - "{,.github/}zizmor.{yml,yaml}"
       run: zizmor --offline .
+    # ghasec checks all workflows and actions under the repository. Run
+    # offline so the hook needs no GitHub token or network; online rules run
+    # in CI
+    - name: ghasec
+      glob:
+        - ".github/workflows/*.{yml,yaml}"
+        - "**/action.{yml,yaml}"
+      run: ghasec
