@@ -11,6 +11,7 @@ tasks:
   environment:check:
     desc: Check required tools are available
     cmds:
+      - actionlint --version
       - claude --version
       - curl --version
       - docker --version

@@ -1,4 +1,5 @@
 [tools]
+actionlint = "1.7.12"
 claude = "2.1.316"
 gh = "2.103.3"
 herdr = "0.9.5"
