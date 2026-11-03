@@ -16,6 +16,7 @@ tasks:
       - curl --version
       - docker --version
       - gh --version
+      - ghalint --version
       - git --version
       - herdr --version
       - jq --version

@@ -1,0 +1,73 @@
+---
+name: run_ghalint
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/**
+      - ghalint.yaml
+      - ghalint.yml
+      - .ghalint.yaml
+      - .ghalint.yml
+      - .github/ghalint.yaml
+      - .github/ghalint.yml
+      - .github/.ghalint.yaml
+      - .github/.ghalint.yml
+      - "**/action.yml"
+      - "**/action.yaml"
+      - mise.toml
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/**
+      - ghalint.yaml
+      - ghalint.yml
+      - .ghalint.yaml
+      - .ghalint.yml
+      - .github/ghalint.yaml
+      - .github/ghalint.yml
+      - .github/.ghalint.yaml
+      - .github/.ghalint.yml
+      - "**/action.yml"
+      - "**/action.yaml"
+      - mise.toml
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  ghalint:
+    name: Lint GitHub Actions workflows and actions with ghalint
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Install ghalint at the version pinned in mise.toml. Keep the mise
+      # version in sync with .devcontainer/github-actions/devcontainer.json
+      - name: Install ghalint
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          version: 2026.10.25
+          install_args: ghalint
+
+      - name: Run ghalint for workflows
+        run: ghalint run
+
+      # Run even if the workflow lint fails, to report all violations at once
+      - name: Run ghalint for actions
+        if: ${{ !cancelled() }}
+        run: ghalint run-action
