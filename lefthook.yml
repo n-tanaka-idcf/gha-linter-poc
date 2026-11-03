@@ -10,3 +10,16 @@ pre-commit:
         - ".github/actionlint.{yml,yaml}"
         - "**/action.{yml,yaml}"
       run: actionlint
+    # ghalint takes no file arguments and always lints all workflows
+    - name: ghalint
+      glob:
+        - ".github/workflows/*.{yml,yaml}"
+        - "{,.}ghalint.{yml,yaml}"
+        - ".github/{,.}ghalint.{yml,yaml}"
+      run: ghalint run
+    - name: ghalint run-action
+      glob:
+        - "**/action.{yml,yaml}"
+        - "{,.}ghalint.{yml,yaml}"
+        - ".github/{,.}ghalint.{yml,yaml}"
+      run: ghalint run-action
