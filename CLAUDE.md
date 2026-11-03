@@ -41,8 +41,9 @@ gh actions-lock --verify    # 書き込まずに検証（CI と同じ。ネッ�
 - **ツールのバージョン**（`mise.toml`）を上げたとき:
   - 対応する `docs/<tool>-rules.md` を見直す（各ドキュメントは固定バージョンの公式ドキュメントへのリンクと、その版のルール一覧を持つ）。
   - actionlint の場合、`.github/actionlint-matcher.json` は actionlint 本家の同バージョンからコピーしたもの。
-- **`run_github_actions_lint.yaml` のトリガー `paths:`**: `pull_request` と `push` の両方に同じリストがある。各ツールが読む設定ファイルの和集合になっているので、ツール追加時はそのツールの設定ファイル名も追加する。`lefthook.yml` の各ジョブの `glob:` も同じ考え方で書かれている。
-- **`run_devcontainer_ci.yaml` のトリガー `paths:`**: こちらも `pull_request` と `push` で重複。devcontainer を build して `task environment:check` を実行するので、`Taskfile.yml` にツールを追加したら `mise.toml` にも追加する。
+- **`run_github_actions_lint.yaml` のトリガー `paths:`**: 各ツールが読む設定ファイルの和集合になっているので、ツール追加時はそのツールの設定ファイル名も追加する。`lefthook.yml` の各ジョブの `glob:` も同じ考え方で書かれている。
+- **`run_devcontainer_ci.yaml` のトリガー `paths:`**: devcontainer を build して `task environment:check` を実行するので、`Taskfile.yml` にツールを追加したら `mise.toml` にも追加する。
+- どちらのワークフローも `paths:` は `pull_request` 側に YAML アンカー（`&paths`）を付けて定義し、`push` 側はエイリアス（`*paths`）で参照している。リストは `pull_request` 側だけを編集すればよい。`lefthook.yml` の `glob:` も、複数ジョブで使うパターン（`*workflows`・`*actions` など）は最初に出てくる箇所でアンカーを付けて定義している。
 - CI の各リンターは独立したジョブにしてあり、1 つが失敗しても他の結果が出る。ghasec の `shellcheck` ルールは PATH 上の shellcheck を使うため、CI では mise で固定版の shellcheck も入れている。
 
 ## ワークフローを書くときの規約
