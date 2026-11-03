@@ -1,0 +1,74 @@
+---
+name: run_zizmor
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/**
+      - .github/dependabot.yml
+      - .github/dependabot.yaml
+      - .pre-commit-config.yml
+      - .pre-commit-config.yaml
+      - .pre-commit-hooks.yaml
+      - zizmor.yml
+      - zizmor.yaml
+      - .github/zizmor.yml
+      - .github/zizmor.yaml
+      - "**/action.yml"
+      - "**/action.yaml"
+      - mise.toml
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/**
+      - .github/dependabot.yml
+      - .github/dependabot.yaml
+      - .pre-commit-config.yml
+      - .pre-commit-config.yaml
+      - .pre-commit-hooks.yaml
+      - zizmor.yml
+      - zizmor.yaml
+      - .github/zizmor.yml
+      - .github/zizmor.yaml
+      - "**/action.yml"
+      - "**/action.yaml"
+      - mise.toml
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  zizmor:
+    name: Audit GitHub Actions workflows and actions with zizmor
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Install zizmor at the version pinned in mise.toml. Keep the mise
+      # version in sync with .devcontainer/github-actions/devcontainer.json
+      - name: Install zizmor
+        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        with:
+          version: 2026.10.25
+          install_args: zizmor
+
+      # The token enables online audits (impostor-commit, ref-confusion,
+      # known-vulnerable-actions, etc.). --format github emits annotations
+      - name: Run zizmor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: zizmor --format github .
