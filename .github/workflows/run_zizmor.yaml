@@ -7,14 +7,13 @@ on:
       - .github/workflows/**
       - .github/dependabot.yml
       - .github/dependabot.yaml
+      - .pre-commit-config.yml
+      - .pre-commit-config.yaml
+      - .pre-commit-hooks.yaml
       - zizmor.yml
       - zizmor.yaml
-      - .zizmor.yml
-      - .zizmor.yaml
       - .github/zizmor.yml
       - .github/zizmor.yaml
-      - .github/.zizmor.yml
-      - .github/.zizmor.yaml
       - "**/action.yml"
       - "**/action.yaml"
       - mise.toml
@@ -25,14 +24,13 @@ on:
       - .github/workflows/**
       - .github/dependabot.yml
       - .github/dependabot.yaml
+      - .pre-commit-config.yml
+      - .pre-commit-config.yaml
+      - .pre-commit-hooks.yaml
       - zizmor.yml
       - zizmor.yaml
-      - .zizmor.yml
-      - .zizmor.yaml
       - .github/zizmor.yml
       - .github/zizmor.yaml
-      - .github/.zizmor.yml
-      - .github/.zizmor.yaml
       - "**/action.yml"
       - "**/action.yaml"
       - mise.toml
