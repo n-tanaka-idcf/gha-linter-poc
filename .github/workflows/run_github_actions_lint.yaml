@@ -2,12 +2,13 @@
 name: run_github_actions_lint
 
 # Lint and audit GitHub Actions workflows and actions with actionlint, ghalint,
-# ghasec and zizmor. The paths below are the union of the files each tool reads
+# ghasec and zizmor, and verify the workflow lockfile with gh actions-lock.
+# The paths below are the union of the files each tool reads
 on:
   pull_request:
     # Keep in sync with the paths under push
     paths:
-      # Workflows and actions (all tools)
+      # Workflows, the workflow lockfile (actions.lock) and actions (all tools)
       - .github/workflows/**
       - "**/action.yml"
       - "**/action.yaml"
@@ -88,7 +89,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1 # ghasec-ignore: unpinned-action
         with:
           persist-credentials: false
 
@@ -96,7 +97,7 @@ jobs:
       # at the versions pinned in mise.toml. Keep the mise version in sync with
       # .devcontainer/github-actions/devcontainer.json
       - name: Install actionlint and shellcheck
-        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: actionlint shellcheck
@@ -116,14 +117,14 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1 # ghasec-ignore: unpinned-action
         with:
           persist-credentials: false
 
       # Install ghalint at the version pinned in mise.toml. Keep the mise
       # version in sync with .devcontainer/github-actions/devcontainer.json
       - name: Install ghalint
-        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: ghalint
@@ -144,7 +145,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1 # ghasec-ignore: unpinned-action
         with:
           persist-credentials: false
 
@@ -153,7 +154,7 @@ jobs:
       # here instead of using the one preinstalled on the runner. Keep the
       # mise version in sync with .devcontainer/github-actions/devcontainer.json
       - name: Install ghasec and ShellCheck
-        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: aqua:koki-develop/ghasec shellcheck
@@ -178,14 +179,14 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@v7.0.1 # ghasec-ignore: unpinned-action
         with:
           persist-credentials: false
 
       # Install zizmor at the version pinned in mise.toml. Keep the mise
       # version in sync with .devcontainer/github-actions/devcontainer.json
       - name: Install zizmor
-        uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
+        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: zizmor
@@ -196,3 +197,37 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: zizmor --format github .
+
+  gh-actions-lock:
+    name: Verify GitHub Actions workflow lockfile
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7.0.1 # ghasec-ignore: unpinned-action
+        with:
+          persist-credentials: false
+
+      # Install gh at the version pinned in mise.toml. Keep the mise version in
+      # sync with .devcontainer/github-actions/devcontainer.json
+      - name: Install gh
+        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
+        with:
+          version: 2026.10.25
+          install_args: gh
+
+      # gh extensions are not managed by mise. Keep the version in sync with
+      # .devcontainer/github-actions/postCreateCommand.sh
+      - name: Install gh actions-lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh extension install github/gh-actions-lock --pin v0.4.1
+
+      # Fail if .github/workflows/actions.lock is out of sync with the
+      # workflows or a locked commit no longer verifies upstream
+      - name: Run gh actions-lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh actions-lock --verify

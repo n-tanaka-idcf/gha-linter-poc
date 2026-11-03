@@ -30,5 +30,16 @@ cd "$(dirname "$0")/../.."
 mise trust
 mise install
 
+# Install gh extensions, which mise does not manage. Keep the gh actions-lock
+# version in sync with .github/workflows/run_github_actions_lint.yaml
+# gh needs authentication to install extensions; on first create, run
+# `gh auth login` and then this command manually
+if gh auth status >/dev/null 2>&1; then
+  gh extension install github/gh-actions-lock --pin v0.4.1
+else
+  echo "Skip: gh is not authenticated; run 'gh auth login' and then" \
+    "'gh extension install github/gh-actions-lock --pin v0.4.1'"
+fi
+
 # Install Git hooks defined in lefthook.yml
 lefthook install

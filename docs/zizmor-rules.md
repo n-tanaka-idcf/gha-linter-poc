@@ -1,8 +1,8 @@
 # zizmor ルール一覧
 
-zizmor は、GitHub Actions のワークフローファイル（`.github/workflows/*.yml`）、アクションのメタデータ（`action.yml`）、Dependabot の設定ファイル（`.github/dependabot.yml`）、pre-commit の設定ファイル（`.pre-commit-config.yaml`）を静的に解析し、セキュリティ上の問題を見つけるツールです。zizmor ではルールを「audit（監査）」と呼びます。このドキュメントは、このリポジトリで固定している **v1.31.1** の公式ドキュメント（[docs/audits.md](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md)）に載っている全ルールをまとめたものです。
+zizmor は、GitHub Actions のワークフローファイル（`.github/workflows/*.yml`）、アクションのメタデータ（`action.yml`）、Dependabot の設定ファイル（`.github/dependabot.yml`）、pre-commit の設定ファイル（`.pre-commit-config.yaml`）を静的に解析し、セキュリティ上の問題を見つけるツールです。zizmor ではルールを「audit（監査）」と呼びます。このドキュメントは、このリポジトリで固定している **v1.32.0** の公式ドキュメント（[docs/audits.md](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md)）に載っている全ルールをまとめたものです。
 
-ルールは zizmor のバージョンによって変わるため、リンク先も v1.31.1 に固定しています。`mise.toml` で zizmor のバージョンを上げたときは、このドキュメントも見直してください。
+ルールは zizmor のバージョンによって変わるため、リンク先も v1.32.0 に固定しています。`mise.toml` で zizmor のバージョンを上げたときは、このドキュメントも見直してください。
 
 指摘は次の形式で出力されます。`[ ]` の中がルール名、先頭の `help` / `warning` / `error` などが重大度、`audit confidence` が確信度（誤検知でない可能性の高さ）です。`audit documentation` の URL は最新版のドキュメントを指します。
 
@@ -58,47 +58,47 @@ zizmor には、どこまで細かく指摘するかを決める 3 つの「ペ�
 
 | ルール名 | 内容 | 対象 | ペルソナ | オフライン | 自動修正 | 設定 | 追加 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| [`adhoc-packages`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#adhoc-packages) | `run:` でロックファイルを使わずにパッケージを入れていないか | W, A | | ✅ | | | v1.26.0 |
-| [`anonymous-definition`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#anonymous-definition) | ワークフロー・アクションに `name:` があるか | W, A | pedantic | ✅ | | | v1.10.0 |
-| [`archived-uses`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#archived-uses) | アーカイブされたリポジトリのアクションを使っていないか | W, A | | ✅ | | | v1.19.0 |
-| [`artipacked`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#artipacked) | `actions/checkout` が認証情報をディスクに残していないか | W | | ✅ | ⚠️ | | v0.1.0 |
-| [`bot-conditions`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#bot-conditions) | なりすましできる bot の判定（`github.actor`）を使っていないか | W | | ✅ | ✅ | | v1.2.0 |
-| [`cache-poisoning`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#cache-poisoning) | キャッシュを汚染される経路がないか | W | | ✅ | ⚠️ | | v0.10.0 |
-| [`concurrency-limits`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#concurrency-limits) | `concurrency:` で同じワークフローの重複実行を止めているか | W | pedantic | ✅ | | | v1.16.0 |
-| [`dangerous-triggers`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#dangerous-triggers) | 危険なトリガー（`pull_request_target` など）を使っていないか | W | | ✅ | | | v0.1.0 |
-| [`dependabot-cooldown`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#dependabot-cooldown) | Dependabot に十分な `cooldown` があるか | D | | ✅ | ✅ | ✅ | v1.15.0 |
-| [`dependabot-execution`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#dependabot-execution) | Dependabot に外部コードの実行を許可していないか | D | | ✅ | ⚠️ | | v1.15.0 |
-| [`excessive-permissions`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#excessive-permissions) | `GITHUB_TOKEN` に必要以上の権限を与えていないか | W | | ✅ | | | v0.1.0 |
-| [`forbidden-uses`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#forbidden-uses) | 禁止したアクションを使っていないか（設定したときだけ動く） | W, A | | ✅ | | ✅ | v1.6.0 |
-| [`github-app`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#github-app) | GitHub App のトークンを危険な形で発行していないか | W, A | | ✅ | | | v1.25.0 |
-| [`github-env`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#github-env) | `GITHUB_ENV` / `GITHUB_PATH` に危険な書き込みをしていないか | W, A | | ✅ | | | v0.6.0 |
-| [`hardcoded-container-credentials`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#hardcoded-container-credentials) | コンテナの認証情報を直接書いていないか | W | | ✅ | | | v0.1.0 |
-| [`impostor-commit`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#impostor-commit) | `uses:` の SHA がフォークにしかない偽のコミットでないか | W, A, P | | ❌ | ✅ | | v0.1.0 |
-| [`insecure-commands`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#insecure-commands) | 廃止された危険なワークフローコマンドを有効にしていないか | W, A | | ✅ | ⚠️ | | v0.5.0 |
-| [`insecure-url-scheme`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#insecure-url-scheme) | 暗号化されない URL（`http://`、`git://`）を使っていないか | P | | ✅ | | | v1.29.0 |
-| [`known-vulnerable-actions`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#known-vulnerable-actions) | 既知の脆弱性があるアクションを使っていないか | W, A | | ❌ | ⚠️ | ✅ | v0.1.0 |
-| [`misfeature`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#misfeature) | 使うべきでない機能（CMD シェルなど）を使っていないか | W, A | 一部 | ✅ | | | v1.21.0 |
-| [`obfuscation`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#obfuscation) | 難読化された書き方をしていないか | W, A | | ✅ | ⚠️ | | v1.7.0 |
-| [`overprovisioned-secrets`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#overprovisioned-secrets) | `secrets` コンテキスト全体を渡していないか | W, A | | ✅ | | | v1.3.0 |
-| [`ref-confusion`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#ref-confusion) | `uses:` のブランチ名・タグ名が紛らわしくないか | W, A | | ❌ | | | v0.1.0 |
-| [`ref-version-mismatch`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#ref-version-mismatch) | `uses:` の SHA とバージョンのコメントが一致しているか | W, A | 一部 | ✅ | ⚠️ | | v1.14.0 |
-| [`secrets-inherit`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#secrets-inherit) | `secrets: inherit` を使っていないか | W | | ✅ | | | v1.1.0 |
-| [`secrets-outside-env`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#secrets-outside-env) | シークレットを環境（environment）の外で使っていないか | W | auditor | ✅ | | ✅ | v1.23.0 |
-| [`self-hosted-runner`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#self-hosted-runner) | セルフホストランナーを使っていないか | W | pedantic | ✅ | | | v0.1.0 |
-| [`self-repository`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#self-repository) | 同じリポジトリのアクションを `$/` の書き方で参照しているか | W, A | | ✅ | ⚠️ | | v1.30.0 |
-| [`stale-action-refs`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#stale-action-refs) | `uses:` の SHA がタグの付いたコミットか | W, A | pedantic | ❌ | | | v1.7.0 |
-| [`superfluous-actions`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#superfluous-actions) | ランナーにあるコマンドで代わりがきくアクションを使っていないか | W, A | | ✅ | | | v1.23.0 |
-| [`template-injection`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#template-injection) | `${{ }}` の展開でコードを注入されないか | W, A | 一部 | ✅ | ⚠️ | | v0.1.0 |
-| [`typosquat-uses`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#typosquat-uses) | 有名なアクションに似せた名前のリポジトリを使っていないか | W, A, P | | ✅ | | | v1.26.0 |
-| [`undocumented-permissions`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#undocumented-permissions) | `permissions:` の各権限に理由のコメントがあるか | W | pedantic | ✅ | | | v1.13.0 |
-| [`unpinned-images`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#unpinned-images) | コンテナイメージを固定しているか | W, A | 一部 | ✅ | | | v1.7.0 |
-| [`unpinned-tools`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#unpinned-tools) | アクションが中で使うツールのバージョンを固定しているか | W, A | | ✅ | | | v1.25.0 |
-| [`unpinned-uses`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#unpinned-uses) | `uses:` をコミット SHA で固定しているか | W, A | | ✅ | ⚠️ | ✅ | v0.4.0 |
-| [`unredacted-secrets`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#unredacted-secrets) | ログでマスクされない形でシークレットを使っていないか | W, A | | ✅ | | | v1.4.0 |
-| [`unsound-condition`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#unsound-condition) | `if:` が意図せず常に真になっていないか | W, A | | ✅ | ✅ | | v1.12.0 |
-| [`unsound-contains`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#unsound-contains) | `contains()` を部分一致ですり抜けられる形で使っていないか | W | | ✅ | | | v1.7.0 |
-| [`unsound-ternary`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#unsound-ternary) | `&&` / `\|\|` の疑似三項演算子が意図どおりに動くか | W, A | | ✅ | | | v1.26.0 |
-| [`use-trusted-publishing`](https://github.com/zizmorcore/zizmor/blob/v1.31.1/docs/audits.md#use-trusted-publishing) | パッケージの公開に Trusted Publishing を使えないか | W | | ✅ | | | v0.1.0 |
+| [`adhoc-packages`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#adhoc-packages) | `run:` でロックファイルを使わずにパッケージを入れていないか | W, A | | ✅ | | | v1.26.0 |
+| [`anonymous-definition`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#anonymous-definition) | ワークフロー・アクションに `name:` があるか | W, A | pedantic | ✅ | | | v1.10.0 |
+| [`archived-uses`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#archived-uses) | アーカイブされたリポジトリのアクションを使っていないか | W, A | | ✅ | | | v1.19.0 |
+| [`artipacked`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#artipacked) | `actions/checkout` が認証情報をディスクに残していないか | W | | ✅ | ⚠️ | | v0.1.0 |
+| [`bot-conditions`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#bot-conditions) | なりすましできる bot の判定（`github.actor`）を使っていないか | W | | ✅ | ✅ | | v1.2.0 |
+| [`cache-poisoning`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#cache-poisoning) | キャッシュを汚染される経路がないか | W | | ✅ | ⚠️ | | v0.10.0 |
+| [`concurrency-limits`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#concurrency-limits) | `concurrency:` で同じワークフローの重複実行を止めているか | W | pedantic | ✅ | | | v1.16.0 |
+| [`dangerous-triggers`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#dangerous-triggers) | 危険なトリガー（`pull_request_target` など）を使っていないか | W | | ✅ | | | v0.1.0 |
+| [`dependabot-cooldown`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#dependabot-cooldown) | Dependabot に十分な `cooldown` があるか | D | | ✅ | ✅ | ✅ | v1.15.0 |
+| [`dependabot-execution`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#dependabot-execution) | Dependabot に外部コードの実行を許可していないか | D | | ✅ | ⚠️ | | v1.15.0 |
+| [`excessive-permissions`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#excessive-permissions) | `GITHUB_TOKEN` に必要以上の権限を与えていないか | W | | ✅ | | | v0.1.0 |
+| [`forbidden-uses`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#forbidden-uses) | 禁止したアクションを使っていないか（設定したときだけ動く） | W, A | | ✅ | | ✅ | v1.6.0 |
+| [`github-app`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#github-app) | GitHub App のトークンを危険な形で発行していないか | W, A | | ✅ | | | v1.25.0 |
+| [`github-env`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#github-env) | `GITHUB_ENV` / `GITHUB_PATH` に危険な書き込みをしていないか | W, A | | ✅ | | | v0.6.0 |
+| [`hardcoded-container-credentials`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#hardcoded-container-credentials) | コンテナの認証情報を直接書いていないか | W | | ✅ | | | v0.1.0 |
+| [`impostor-commit`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#impostor-commit) | `uses:` の SHA がフォークにしかない偽のコミットでないか | W, A, P | | ❌ | ✅ | | v0.1.0 |
+| [`insecure-commands`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#insecure-commands) | 廃止された危険なワークフローコマンドを有効にしていないか | W, A | | ✅ | ⚠️ | | v0.5.0 |
+| [`insecure-url-scheme`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#insecure-url-scheme) | 暗号化されない URL（`http://`、`git://`）を使っていないか | P | | ✅ | | | v1.29.0 |
+| [`known-vulnerable-actions`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#known-vulnerable-actions) | 既知の脆弱性があるアクションを使っていないか | W, A | | ❌ | ⚠️ | ✅ | v0.1.0 |
+| [`misfeature`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#misfeature) | 使うべきでない機能（CMD シェルなど）を使っていないか | W, A | 一部 | ✅ | | | v1.21.0 |
+| [`obfuscation`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#obfuscation) | 難読化された書き方をしていないか | W, A | | ✅ | ⚠️ | | v1.7.0 |
+| [`overprovisioned-secrets`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#overprovisioned-secrets) | `secrets` コンテキスト全体を渡していないか | W, A | | ✅ | | | v1.3.0 |
+| [`ref-confusion`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#ref-confusion) | `uses:` のブランチ名・タグ名が紛らわしくないか | W, A | | ❌ | | | v0.1.0 |
+| [`ref-version-mismatch`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#ref-version-mismatch) | `uses:` の SHA とバージョンのコメントが一致しているか | W, A | 一部 | ✅ | ⚠️ | | v1.14.0 |
+| [`secrets-inherit`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#secrets-inherit) | `secrets: inherit` を使っていないか | W | | ✅ | | | v1.1.0 |
+| [`secrets-outside-env`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#secrets-outside-env) | シークレットを環境（environment）の外で使っていないか | W | auditor | ✅ | | ✅ | v1.23.0 |
+| [`self-hosted-runner`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#self-hosted-runner) | セルフホストランナーを使っていないか | W | pedantic | ✅ | | | v0.1.0 |
+| [`self-repository`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#self-repository) | 同じリポジトリのアクションを `$/` の書き方で参照しているか | W, A | | ✅ | ⚠️ | | v1.30.0 |
+| [`stale-action-refs`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#stale-action-refs) | `uses:` の SHA がタグの付いたコミットか | W, A | pedantic | ❌ | | | v1.7.0 |
+| [`superfluous-actions`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#superfluous-actions) | ランナーにあるコマンドで代わりがきくアクションを使っていないか | W, A | | ✅ | | | v1.23.0 |
+| [`template-injection`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#template-injection) | `${{ }}` の展開でコードを注入されないか | W, A | 一部 | ✅ | ⚠️ | | v0.1.0 |
+| [`typosquat-uses`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#typosquat-uses) | 有名なアクションに似せた名前のリポジトリを使っていないか | W, A, P | | ✅ | | | v1.26.0 |
+| [`undocumented-permissions`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#undocumented-permissions) | `permissions:` の各権限に理由のコメントがあるか | W | pedantic | ✅ | | | v1.13.0 |
+| [`unpinned-images`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#unpinned-images) | コンテナイメージを固定しているか | W, A | 一部 | ✅ | | | v1.7.0 |
+| [`unpinned-tools`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#unpinned-tools) | アクションが中で使うツールのバージョンを固定しているか | W, A | | ✅ | | | v1.25.0 |
+| [`unpinned-uses`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#unpinned-uses) | `uses:` をコミット SHA で固定しているか | W, A | | ✅ | ⚠️ | ✅ | v0.4.0 |
+| [`unredacted-secrets`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#unredacted-secrets) | ログでマスクされない形でシークレットを使っていないか | W, A | | ✅ | | | v1.4.0 |
+| [`unsound-condition`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#unsound-condition) | `if:` が意図せず常に真になっていないか | W, A | | ✅ | ✅ | | v1.12.0 |
+| [`unsound-contains`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#unsound-contains) | `contains()` を部分一致ですり抜けられる形で使っていないか | W | | ✅ | | | v1.7.0 |
+| [`unsound-ternary`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#unsound-ternary) | `&&` / `\|\|` の疑似三項演算子が意図どおりに動くか | W, A | | ✅ | | | v1.26.0 |
+| [`use-trusted-publishing`](https://github.com/zizmorcore/zizmor/blob/v1.32.0/docs/audits.md#use-trusted-publishing) | パッケージの公開に Trusted Publishing を使えないか | W | | ✅ | | | v0.1.0 |
 
 公式ドキュメントの各ルールの表では、`known-vulnerable-actions` と `secrets-outside-env` の「Configurable」は ❌ になっています。ただし同じページの本文では、それぞれ v1.26.0、v1.24.0 から `allow` を設定できると書かれているため、ここでは ✅ にしています。
 
@@ -110,7 +110,7 @@ zizmor には、どこまで細かく指摘するかを決める 3 つの「ペ�
 
 | ルール名 | 内容 | 理由 | 直し方 |
 | --- | --- | --- | --- |
-| `unpinned-uses` | `uses:` をブランチ名やタグではなく、コミット SHA で固定する。既定では `actions/*` を含むすべてのアクションが対象（v1.20.0 から）。`docker://` のイメージはタグがないと指摘する | ブランチやタグは付け替えられるので、アクションのリポジトリが乗っ取られると悪意のあるコードが実行されるため | `actions/checkout@<SHA> # v6` のように SHA で固定する。[pinact](https://github.com/suzuki-shunsuke/pinact) などで自動化できる |
+| `unpinned-uses` | `uses:` をブランチ名やタグではなく、コミット SHA で固定する。既定では `actions/*` を含むすべてのアクションが対象（v1.20.0 から）。`docker://` のイメージはタグがないと指摘する。ワークフローの依存ロックファイル（`.github/workflows/actions.lock`）があるときは、ロックファイルで固定されるワークフローのアクションは指摘せず、ロックファイルで固定できない再利用可能ワークフローの呼び出しと `action.yml` 内のアクションだけを指摘する（v1.32.0 から、実験的な対応。[説明](https://docs.zizmor.sh/usage/#workflow-lockfiles)） | ブランチやタグは付け替えられるので、アクションのリポジトリが乗っ取られると悪意のあるコードが実行されるため | `actions/checkout@<SHA> # v6` のように SHA で固定する。[pinact](https://github.com/suzuki-shunsuke/pinact) などで自動化できる。ワークフローのアクションは、`gh actions-lock` で作るロックファイルで固定してもよい |
 | `ref-confusion` | `uses:` の `@v1` などが、同じ名前のブランチとタグのどちらも指しうる形になっていないか | 攻撃者が同名のブランチやタグを作ると、利用者側を変えずに悪意のあるアクションを配れるため | SHA で固定する |
 | `impostor-commit` | `uses:` の SHA が、そのリポジトリではなくフォークにしかないコミットでないか | GitHub はフォークのコミットも元のリポジトリ名で参照できるので、SHA で固定していても偽のコミットを紛れ込ませられるため | 外部からの PR で SHA が変わったら、そのコミットが本当に元のリポジトリにあるか確かめる。見つかったら正しいコミットに差し替える |
 | `stale-action-refs` | `uses:` の SHA が、タグの付いていないコミットを指していないか | リリースされていないコミットには、修正済みでも公表されていないバグや脆弱性があるかもしれず、変更履歴からどの変更を含むかも分かりにくいため | タグの付いたコミットの SHA で固定する |
@@ -196,7 +196,7 @@ run: | # zizmor: ignore[template-injection] 無視する理由を書く
 設定ファイルの `rules.<ルール名>.ignore` に、無視する場所を `ファイル名[:行[:列]]` の形式で書きます。ファイル名はワークフローのファイル名（ディレクトリを含まない）で、行と列は 1 から数えます。行や列を省くと、そのファイル全体・行全体が対象になります。
 
 ```yaml
-# yaml-language-server: $schema=https://raw.githubusercontent.com/zizmorcore/zizmor/v1.31.1/support/zizmor.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/zizmorcore/zizmor/v1.32.0/support/zizmor.schema.json
 rules:
   template-injection:
     ignore:
@@ -255,4 +255,4 @@ rules:
 
 CI では `--format github` で、指摘を PR の差分に注釈として表示します。GitHub の制限で、1 つのステップに表示できる注釈は 10 個までです。それより多い指摘は、ジョブのログで確認してください。
 
-zizmor は、どの実行方法でも `mise.toml` で固定したバージョンを使います。どの実行方法でもペルソナは既定の `regular` です。このリポジトリには今のところ zizmor の設定ファイルはなく、すべてのルールを既定の設定で適用しています。
+zizmor は、どの実行方法でも `mise.toml` で固定したバージョンを使います。どの実行方法でもペルソナは既定の `regular` です。このリポジトリには今のところ zizmor の設定ファイルはなく、すべてのルールを既定の設定で適用しています。ワークフローのアクションはロックファイル（`.github/workflows/actions.lock`）で固定しており、`uses:` はタグで書いていますが、zizmor はロックファイルを読むので `unpinned-uses` で指摘されません。ロックファイルがあると、実行のたびに実験的な対応である旨の警告（`WARN ... uses a GitHub Actions workflow lockfile`）が出ます。
