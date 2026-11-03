@@ -1,5 +1,6 @@
 [tools]
 actionlint = "1.7.12"
+"aqua:koki-develop/ghasec" = "0.18.0"
 claude = "2.1.316"
 gh = "2.103.3"
 ghalint = "1.6.0"
