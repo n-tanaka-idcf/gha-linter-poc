@@ -41,13 +41,20 @@ jobs:
         with:
           persist-credentials: false
 
-      # Install ghasec at the version pinned in mise.toml. Keep the mise
-      # version in sync with .devcontainer/github-actions/devcontainer.json
-      - name: Install ghasec
+      # Install ghasec and ShellCheck at the versions pinned in mise.toml.
+      # ghasec's shellcheck rule runs the shellcheck on PATH, so install it
+      # here instead of using the one preinstalled on the runner. Keep the
+      # mise version in sync with .devcontainer/github-actions/devcontainer.json
+      - name: Install ghasec and ShellCheck
         uses: jdx/mise-action@f5be966e4a917d54244728e6a5fdcd1d93a35e6c # v5.2.6
         with:
           version: 2026.10.25
-          install_args: aqua:koki-develop/ghasec
+          install_args: aqua:koki-develop/ghasec shellcheck
+
+      - name: Show ShellCheck used by ghasec
+        run: |
+          command -v shellcheck
+          shellcheck --version
 
       # --online enables rules that query the GitHub API; the token raises
       # the rate limit. --format github-actions emits annotations

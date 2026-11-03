@@ -168,4 +168,4 @@ steps:
 
 CI では `--format github-actions` で、指摘を PR の差分に注釈として表示します。GitHub の制限で、1 つのステップに表示できる注釈は 10 個までです。それより多い指摘は、ジョブのログで確認してください。
 
-ghasec は、どの実行方法でも `mise.toml` で固定したバージョンを使います。`shellcheck` ルールが使う ShellCheck は、手動とコミット前では `mise.toml` で固定したもの、CI では GitHub がホストするランナーにあらかじめ入っているものです。このリポジトリでは、今のところ `ghasec-ignore` コメントは使っておらず、すべてのルールを適用しています。
+ghasec と、`shellcheck` ルールが使う ShellCheck は、どの実行方法でも `mise.toml` で固定したバージョンを使います。CI では、ランナーにあらかじめ入っている ShellCheck ではなく、mise で入れたものを使います。このリポジトリでは、今のところ `ghasec-ignore` コメントは使っておらず、すべてのルールを適用しています。
