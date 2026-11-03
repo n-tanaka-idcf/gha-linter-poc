@@ -3,7 +3,8 @@ name: run_devcontainer_ci
 
 on:
   pull_request:
-    paths:
+    # Reused by push through the YAML anchor
+    paths: &paths
       - .github/workflows/run_devcontainer_ci.yaml
       - .devcontainer/**
       - Taskfile.yml
@@ -13,12 +14,7 @@ on:
   push:
     branches:
       - main
-    paths:
-      - .github/workflows/run_devcontainer_ci.yaml
-      - .devcontainer/**
-      - Taskfile.yml
-      - lefthook.yml
-      - mise.toml
+    paths: *paths
   workflow_dispatch:
 
 defaults:

@@ -6,8 +6,8 @@ name: run_github_actions_lint
 # The paths below are the union of the files each tool reads
 on:
   pull_request:
-    # Keep in sync with the paths under push
-    paths:
+    # Reused by push through the YAML anchor
+    paths: &paths
       # Workflows, the workflow lockfile (actions.lock) and actions (all tools)
       - .github/workflows/**
       - "**/action.yml"
@@ -40,32 +40,7 @@ on:
   push:
     branches:
       - main
-    # Keep in sync with the paths under pull_request
-    paths:
-      - .github/workflows/**
-      - "**/action.yml"
-      - "**/action.yaml"
-      - mise.toml
-      - .github/actionlint.yaml
-      - .github/actionlint.yml
-      - .github/actionlint-matcher.json
-      - ghalint.yaml
-      - ghalint.yml
-      - .ghalint.yaml
-      - .ghalint.yml
-      - .github/ghalint.yaml
-      - .github/ghalint.yml
-      - .github/.ghalint.yaml
-      - .github/.ghalint.yml
-      - .github/dependabot.yml
-      - .github/dependabot.yaml
-      - .pre-commit-config.yml
-      - .pre-commit-config.yaml
-      - .pre-commit-hooks.yaml
-      - zizmor.yml
-      - zizmor.yaml
-      - .github/zizmor.yml
-      - .github/zizmor.yaml
+    paths: *paths
   workflow_dispatch:
 
 defaults:

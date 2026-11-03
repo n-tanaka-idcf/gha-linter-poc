@@ -1,35 +1,37 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/evilmartians/lefthook/v2.2.2/schema.json
 ---
 pre-commit:
+  # Glob patterns used by several jobs are defined once with a YAML anchor
+  # (&name) and reused with an alias (*name)
   jobs:
     # Lint all workflows, not only staged ones, because actionlint checks
     # across files (reusable workflow callers, local action inputs)
     - name: actionlint
       glob:
-        - ".github/workflows/*.{yml,yaml}"
+        - &workflows ".github/workflows/*.{yml,yaml}"
         - ".github/actionlint.{yml,yaml}"
-        - "**/action.{yml,yaml}"
+        - &actions "**/action.{yml,yaml}"
       run: actionlint
     # ghalint takes no file arguments and always lints all workflows
     - name: ghalint
       glob:
-        - ".github/workflows/*.{yml,yaml}"
-        - "{,.}ghalint.{yml,yaml}"
-        - ".github/{,.}ghalint.{yml,yaml}"
+        - *workflows
+        - &ghalint_config "{,.}ghalint.{yml,yaml}"
+        - &ghalint_config_in_github ".github/{,.}ghalint.{yml,yaml}"
       run: ghalint run
     - name: ghalint run-action
       glob:
-        - "**/action.{yml,yaml}"
-        - "{,.}ghalint.{yml,yaml}"
-        - ".github/{,.}ghalint.{yml,yaml}"
+        - *actions
+        - *ghalint_config
+        - *ghalint_config_in_github
       run: ghalint run-action
     # zizmor audits all workflows, actions, Dependabot configs and pre-commit
     # configs under the repository. Run offline so the hook needs no GitHub
     # token or network; online audits (e.g. impostor-commit) run in CI
     - name: zizmor
       glob:
-        - ".github/workflows/*.{yml,yaml}"
-        - "**/action.{yml,yaml}"
+        - *workflows
+        - *actions
         - ".github/dependabot.{yml,yaml}"
         - ".pre-commit-config.{yml,yaml}"
         - ".pre-commit-hooks.yaml"
@@ -41,14 +43,14 @@ pre-commit:
     # in CI
     - name: ghasec
       glob:
-        - ".github/workflows/*.{yml,yaml}"
-        - "**/action.{yml,yaml}"
+        - *workflows
+        - *actions
       run: ghasec
     # Check that every action in the workflows has an entry in the workflow
     # lockfile. --verify-local runs offline and checks coverage only; CI runs
     # --verify, which also checks that the locked commits verify upstream
     - name: gh actions-lock
       glob:
-        - ".github/workflows/*.{yml,yaml}"
+        - *workflows
         - ".github/workflows/actions.lock"
       run: gh actions-lock --verify-local
