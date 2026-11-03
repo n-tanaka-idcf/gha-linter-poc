@@ -138,7 +138,7 @@ shellcheck と pyflakes は、それぞれ `PATH` 上にあるときだけ実行
 | タイミング | 実行方法 | 対象 |
 | --- | --- | --- |
 | 手動 | `actionlint` | 全ワークフロー |
-| コミット前 | lefthook の pre-commit（`lefthook.yml`） | ステージされたワークフローファイル |
-| CI | `.github/workflows/run_actionlint.yaml` | 全ワークフロー（`.github/workflows/**` か `mise.toml` が変わった PR と `main` への push） |
+| コミット前 | lefthook の pre-commit（`lefthook.yml`） | 全ワークフロー（ワークフロー、`.github/actionlint.yaml`、`action.yml` のいずれかをステージしたとき） |
+| CI | `.github/workflows/run_actionlint.yaml` | 全ワークフロー（ワークフロー、`.github/actionlint.yaml`、`action.yml`、`mise.toml` が変わった PR と `main` への push） |
 
 actionlint と shellcheck のバージョンは、どの実行方法でも `mise.toml` で固定したもの（actionlint 1.7.12、shellcheck 0.11.0）を使います。

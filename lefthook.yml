@@ -2,6 +2,11 @@
 ---
 pre-commit:
   jobs:
+    # Lint all workflows, not only staged ones, because actionlint checks
+    # across files (reusable workflow callers, local action inputs)
     - name: actionlint
-      glob: ".github/workflows/*.{yml,yaml}"
-      run: actionlint {staged_files}
+      glob:
+        - ".github/workflows/*.{yml,yaml}"
+        - ".github/actionlint.{yml,yaml}"
+        - "**/action.{yml,yaml}"
+      run: actionlint
