@@ -21,6 +21,7 @@ tasks:
       - jq --version
       - lefthook --version
       - mise --version
+      - shellcheck --version
       - ssh -V
       - sudo --version
       - task --version
