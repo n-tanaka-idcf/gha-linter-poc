@@ -9,7 +9,7 @@ workflows:
         - 'docker/setup-buildx-action@v4.4.1'
     '.github/workflows/run_github_actions_lint.yaml':
         - 'actions/checkout@v7.0.1'
-        - 'jdx/mise-action@v5.2.6'
+        - 'jdx/mise-action@v5.2.7'
 dependencies:
     'actions/checkout@v7.0.1':
         ref: 'v7.0.1'
@@ -26,8 +26,8 @@ dependencies:
         commit: 'sha1-f87e5991a6d7451dcb8d9637bfbc97413f497069'
         owner_id: 5429470
         repo_id: 288485773
-    'jdx/mise-action@v5.2.6':
-        ref: 'v5.2.6'
-        commit: 'sha1-f5be966e4a917d54244728e6a5fdcd1d93a35e6c'
+    'jdx/mise-action@v5.2.7':
+        ref: 'v5.2.7'
+        commit: 'sha1-b44d12e7d0d8ee7461bb893e1b1993500433185b'
         owner_id: 216188
         repo_id: 738284564
