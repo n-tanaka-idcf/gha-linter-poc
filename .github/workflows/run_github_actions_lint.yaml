@@ -72,7 +72,7 @@ jobs:
       # at the versions pinned in mise.toml. Keep the mise version in sync with
       # .devcontainer/github-actions/devcontainer.json
       - name: Install actionlint and shellcheck
-        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
+        uses: jdx/mise-action@v5.2.9 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: actionlint shellcheck
@@ -99,7 +99,7 @@ jobs:
       # Install ghalint at the version pinned in mise.toml. Keep the mise
       # version in sync with .devcontainer/github-actions/devcontainer.json
       - name: Install ghalint
-        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
+        uses: jdx/mise-action@v5.2.9 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: ghalint
@@ -129,7 +129,7 @@ jobs:
       # here instead of using the one preinstalled on the runner. Keep the
       # mise version in sync with .devcontainer/github-actions/devcontainer.json
       - name: Install ghasec and ShellCheck
-        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
+        uses: jdx/mise-action@v5.2.9 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: aqua:koki-develop/ghasec shellcheck
@@ -161,7 +161,7 @@ jobs:
       # Install zizmor at the version pinned in mise.toml. Keep the mise
       # version in sync with .devcontainer/github-actions/devcontainer.json
       - name: Install zizmor
-        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
+        uses: jdx/mise-action@v5.2.9 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: zizmor
@@ -188,7 +188,7 @@ jobs:
       # Install gh at the version pinned in mise.toml. Keep the mise version in
       # sync with .devcontainer/github-actions/devcontainer.json
       - name: Install gh
-        uses: jdx/mise-action@v5.2.6 # ghasec-ignore: unpinned-action
+        uses: jdx/mise-action@v5.2.9 # ghasec-ignore: unpinned-action
         with:
           version: 2026.10.25
           install_args: gh
